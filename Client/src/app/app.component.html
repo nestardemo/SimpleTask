@@ -1,0 +1,86 @@
+<mat-horizontal-stepper linear>
+  <mat-step [stepControl]="userForm">
+    <form [formGroup]="userForm">
+      <ng-template matStepLabel>Credentials</ng-template>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Login</mat-label>
+          <input matInput type="email" placeholder="mymail@example.com" formControlName="userLogin" (blur)="checkLogin()" required>
+          <mat-error *ngIf="userForm.controls['userLogin'].hasError('email') && userForm.controls['userLogin'].touched">
+            Please enter a <strong>valid</strong> email address</mat-error>
+          <mat-error *ngIf="userForm.controls['userLogin'].hasError('required')">Email is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="userForm.controls['userLogin'].hasError('loginAlreadyExists')">
+            Login alrready exists</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" placeholder="Password must contain min 1 digit and min 1 letter"
+            formControlName="userPassword" required>
+          <mat-error *ngIf="userForm.controls['userPassword'].hasError('required')">Password is
+            <strong>required</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="userForm.controls['userPassword'].hasError('pattern') && userForm.controls['userPassword'].touched">
+            Password must contain min 1 digit and min 1 letter</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Confirm password</mat-label>
+          <input matInput type="password" placeholder="Repiat password" formControlName="userPasswordConfirm" required>
+          <mat-error *ngIf="userForm.controls['userPasswordConfirm'].hasError('required')">Password is
+            <strong>required</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="userForm.controls['userPasswordConfirm'].hasError('mismatchPass') && userForm.controls['userPasswordConfirm'].touched">
+            Password not <strong>match</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-checkbox color="primary" formControlName="userAgryCheckBox">Agree to work for expirience</mat-checkbox>
+        <mat-error *ngIf="userForm.controls['userAgryCheckBox'].invalid">Agry is <strong>required</strong> check</mat-error>
+      </div>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="coutryForm" label="Country">
+    <form [formGroup]="coutryForm">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Country</mat-label>
+          <mat-select formControlName="userCountry" #country matNativeControl
+            (selectionChange)="onChangeCountry(country.value)" required>
+            <mat-option *ngFor="let country of countries" [value]="country.countryId">{{country.countryName}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="coutryForm.controls['userCountry'].hasError('required')">Country is
+            <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Province</mat-label>
+          <mat-select formControlName="userProvince" matNativeControl required>
+            <mat-option *ngFor="let province of provinces" [value]="province.provinceId">{{province.provinceName}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="coutryForm.controls['userProvince'].hasError('required')">Province is
+            <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext (click)="onSaveClick()">Save</button>
+      </div>
+      <mat-label *ngIf="isUserAdded">{{resultText}}</mat-label>
+    </form>
+  </mat-step>
+</mat-horizontal-stepper>
