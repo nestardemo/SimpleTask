@@ -5,7 +5,7 @@ using SimpleWebApi.Infrastructure.Database;
 
 namespace SimpleWebApi.Features.Users
 {
-    public class GetUserResponse 
+    public class GetUserResponse
     {
         public Guid UserId { get; set; }
         public string Login { get; set; }
@@ -30,10 +30,12 @@ namespace SimpleWebApi.Features.Users
         {
             var query = _databaseContext.Users.AsQueryable();
 
-            if (!string.IsNullOrEmpty(request.Keywords))
+            if (string.IsNullOrEmpty(request.Keywords))
             {
-                query = query.Where(user => user.Login.ToLower().Equals(request.Keywords.ToLower()));
+                throw new Exception("Keywords is required field");
             }
+
+            query = query.Where(user => user.Login.ToLower().Equals(request.Keywords.ToLower()));
 
             return await query.Select(user => new GetUserResponse
             {
